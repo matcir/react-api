@@ -1,35 +1,60 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState, useEffect } from 'react'
 
-function App() {
-  const [count, setCount] = useState(0)
+
+export default function App() {
+
+  const actressesUrl = "https://lanciweb.github.io/demo/api/actresses/ "
+  const actorsUrl = ""
+
+  const [actressesData, setActressesData] = useState(null)
+  const [actorsData, setActorsData] = useState(null)
+  const [apiActressesUrl, setApiActressesUrl] = useState(actressesUrl)
+  const [apiActorsUrl, setApiActorsUrl] = useState(actorsUrl)
+
+  useEffect(() => {
+    fetch(actressesUrl)
+      .then(res => res.json())
+      .then(data => {
+        setActressesData(data)
+      })
+  }, [actressesUrl])
+
+  useEffect(() => {
+    fetch(actorsUrl)
+      .then(res => res.json())
+      .then(data => {
+        setActorsData(data)
+      })
+  }, [actorsUrl])
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+      <h1>Elenco Attrici</h1>
+      <hr />
+      <div className='container'>
+        <div className='row row-cols-1 row-cols-md-3 g-3'>
+          {actressesData && actressesData?.map(actress => (
+            <div key={actress.id} className='col'>
+              <div className='card h-100'>
+                <div className='card-body'>
+                  <figure>
+                    <img src={actress.image} className='card-img-top' alt="" />
+                  </figure>
+                  <div className='info mt-3'>
+                    <h4 className='card-title'>
+                      {actress.name}
+                    </h4>
+                    <p>{actress.birth_year}</p>
+                    <p>{actress.nationality}</p>
+                    <p>{actress.biography}</p>
+                    <p>{actress.awards}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
-
-export default App
