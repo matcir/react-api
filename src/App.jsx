@@ -118,9 +118,8 @@ export default function App() {
         </div>
       </div> */}
 
+
       {/* BONUS 2 */}
-
-
       <div className='container'>
         <h1>Elenco Attrici e Attori</h1>
 
