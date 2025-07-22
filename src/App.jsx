@@ -6,30 +6,52 @@ export default function App() {
   const actressesUrl = "https://lanciweb.github.io/demo/api/actresses/ "
   const actorsUrl = "https://lanciweb.github.io/demo/api/actors/"
 
-  const [actressesData, setActressesData] = useState(null)
-  const [actorsData, setActorsData] = useState(null)
+  //BONUS 2
+  const [peopleData, setPeopleData] = useState([])
+
+  //BONUS 1
+  // const [actressesData, setActressesData] = useState(null)
+  // const [actorsData, setActorsData] = useState(null)
+
+
   const [apiActressesUrl, setApiActressesUrl] = useState(actressesUrl)
   const [apiActorsUrl, setApiActorsUrl] = useState(actorsUrl)
 
+  //BONUS2
   useEffect(() => {
-    fetch(actressesUrl)
-      .then(res => res.json())
-      .then(data => {
-        setActressesData(data)
+    Promise.all([
+      fetch(actressesUrl)
+        .then(res => res.json()),
+      fetch(actorsUrl)
+        .then(res => res.json())
+    ])
+      .then(([actresses, actors]) => {
+        const allActors = [...actresses, ...actors]
+        setPeopleData(allActors)
       })
-  }, [actressesUrl])
+  }, [apiActressesUrl, apiActorsUrl])
 
-  useEffect(() => {
-    fetch(actorsUrl)
-      .then(res => res.json())
-      .then(data => {
-        setActorsData(data)
-      })
-  }, [actorsUrl])
+  //BONUS 1
+  // useEffect(() => {
+  //   fetch(actressesUrl)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       setActressesData(data)
+  //     })
+  // }, [actressesUrl])
+
+  // useEffect(() => {
+  //   fetch(actorsUrl)
+  //     .then(res => res.json())
+  //     .then(data => {
+  //       setActorsData(data)
+  //     })
+  // }, [actorsUrl])
 
   return (
     <>
-      <h1>Elenco Attrici</h1>
+      {/* BONUS1 */}
+      {/* <h1>Elenco Attrici</h1>
 
       <hr />
 
@@ -87,7 +109,38 @@ export default function App() {
             </div>
           ))}
         </div>
+      </div> */}
+
+      {/* BONUS 2 */}
+      <h1>Elenco Attrici e Attori</h1>
+
+      <hr />
+
+      <div className='container'>
+        <div className='row row-cols-1 row-cols-md-3 g-3'>
+          {peopleData && peopleData?.map((person, index) => (
+            <div key={index} className='col'>
+              <div className='card h-100'>
+                <div className='card-body'>
+                  <figure>
+                    <img src={person.image} className='card-img-top' alt="" />
+                  </figure>
+                  <div className='info mt-3'>
+                    <h4 className='card-title'>
+                      {person.name}
+                    </h4>
+                    <p>{person.birth_year}</p>
+                    <p>{person.nationality}</p>
+                    <p>{person.biography}</p>
+                    <p>{person.awards}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
+
     </>
   )
 }
