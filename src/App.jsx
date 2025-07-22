@@ -8,6 +8,7 @@ export default function App() {
 
   //BONUS 2
   const [peopleData, setPeopleData] = useState([])
+  const [filteredPeople, setFilteredPeople] = useState(peopleData);
 
   //BONUS 1
   // const [actressesData, setActressesData] = useState(null)
@@ -16,6 +17,7 @@ export default function App() {
 
   const [apiActressesUrl, setApiActressesUrl] = useState(actressesUrl)
   const [apiActorsUrl, setApiActorsUrl] = useState(actorsUrl)
+  const [searchQuery, setSearchQuery] = useState("")
 
   //BONUS2
   useEffect(() => {
@@ -30,6 +32,11 @@ export default function App() {
         setPeopleData(allActors)
       })
   }, [apiActressesUrl, apiActorsUrl])
+
+  useEffect(() => {
+    const filteredActors = peopleData.filter(person => person.name.toLowerCase().includes(searchQuery.toLowerCase()))
+    setFilteredPeople(filteredActors)
+  }, [searchQuery, peopleData])
 
   //BONUS 1
   // useEffect(() => {
@@ -112,13 +119,17 @@ export default function App() {
       </div> */}
 
       {/* BONUS 2 */}
-      <h1>Elenco Attrici e Attori</h1>
 
-      <hr />
 
       <div className='container'>
+        <h1>Elenco Attrici e Attori</h1>
+
+        <hr />
+
+        <input type="text" value={searchQuery} placeholder='Ricerca per nome...' className='mb-3 w-100' onChange={(e) => setSearchQuery(e.target.value)} />
+
         <div className='row row-cols-1 row-cols-md-3 g-3'>
-          {peopleData && peopleData?.map((person, index) => (
+          {filteredPeople && filteredPeople?.map((person, index) => (
             <div key={index} className='col'>
               <div className='card h-100'>
                 <div className='card-body'>
